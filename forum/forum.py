@@ -184,6 +184,18 @@ def generateLinkPath(subforumid):
 	return link
 
 
+@app.route('/user/<username>')
+@login_required
+def user(username):
+	user = User.query.filter(User.username == username).first()
+	userid = User.query.filter(User.id == username).first()
+	# posts = [
+	# 	{'author': user, 'body': 'Test post #1'},
+	# 	{'author': user, 'body': 'Test post #2'}]
+	posts = [user.posts]
+	return render_template('user_profile.html', user=user, userid = userid)
+
+
 #from forum.app import db, app 
 
 
@@ -234,6 +246,9 @@ class User(UserMixin, db.Model):
 	admin = db.Column(db.Boolean, default=False, unique=True)
 	posts = db.relationship("Post", backref="user")
 	comments = db.relationship("Comment", backref="user")
+	about = db.Column(db.Text)
+	avatar = db.Column(db.Integer, default = 0)
+	background_color = db.Column(db.Text, default = "#77898B")
 
 	def __init__(self, email, username, password):
 		self.email = email
@@ -397,7 +412,7 @@ def setup():
 		interpret_site_value(value)
 """
 
-
+# db.drop_all() #the NUKE
 db.create_all()
 if not Subforum.query.all():
 		init_site()
