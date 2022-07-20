@@ -8,6 +8,6 @@ app.config.update(
 	SITE_NAME = "Hawaiian Shirt Party",
 	SITE_DESCRIPTION = "a forum for Hawaiian Shirt Enthusiasts",
 	SQLALCHEMY_DATABASE_URI='sqlite:////tmp/database.db'
-	#FOOTER= 'copyright 2022 Zeta Data 3.1'
+
 
 )
