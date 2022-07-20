@@ -137,6 +137,19 @@ def action_logout():
 	logout_user()
 	return redirect("/")
 
+
+@app.route('/like/<int:post_id>/<action>')
+@login_required
+def like_action(post_id, action):
+	post = Post.query.filter_by(id=post_id).first_or_404()
+	if action == 'like':
+		current_user.like_post(post)
+		db.session.commit()
+	if action == 'unlike':
+		current_user.unlike_post(post)
+		db.session.commit()
+	return redirect(request.referrer)
+
 @app.route('/action_createaccount', methods=['POST'])
 def action_createaccount():
 	username = request.form['username']
@@ -232,8 +245,9 @@ class User(UserMixin, db.Model):
 	password_hash = db.Column(db.Text)
 	email = db.Column(db.Text, unique=True)
 	admin = db.Column(db.Boolean, default=False, unique=True)
-	posts = db.relationship("Post", backref="user")
+	posts = db.relationship("Post", backref="user", lazy=True)
 	comments = db.relationship("Comment", backref="user")
+	liked = db.relationship('PostLike',foreign_keys='PostLike.user_id',backref='post', lazy='dynamic')
 
 	def __init__(self, email, username, password):
 		self.email = email
@@ -241,6 +255,30 @@ class User(UserMixin, db.Model):
 		self.password_hash = generate_password_hash(password)
 	def check_password(self, password):
 		return check_password_hash(self.password_hash, password)
+
+	def like_post(self, post):
+		if not self.has_liked_post(post):
+			like = PostLike(user_id=self.id, post_id=post.id)
+			db.session.add(like)
+
+	def unlike_post(self, post):
+		if self.has_liked_post(post):
+			PostLike.query.filter_by(
+				user_id=self.id,
+				post_id=post.id).delete()
+
+	def has_liked_post(self, post):
+		return PostLike.query.filter(
+			PostLike.user_id == self.id,
+			PostLike.post_id == post.id).count() > 0
+
+
+class PostLike(db.Model):
+	__tablename__ = 'post_like'
+	id = db.Column(db.Integer, primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False )
+	post_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 class Post(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	title = db.Column(db.Text)
@@ -289,7 +327,7 @@ class Subforum(db.Model):
 	description = db.Column(db.Text)
 	subforums = db.relationship("Subforum")
 	parent_id = db.Column(db.Integer, db.ForeignKey('subforum.id'))
-	posts = db.relationship("Post", backref="subforum")
+	posts = db.relationship("Post", backref="user", lazy=True )
 	path = None
 	hidden = db.Column(db.Boolean, default=False)
 	def __init__(self, title, description):
