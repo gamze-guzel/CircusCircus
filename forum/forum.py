@@ -82,10 +82,30 @@ def comment():
 	content = request.form['content']
 	postdate = datetime.datetime.now()
 	comment = Comment(content, postdate)
+	# current_user.comments.append(comment)
+	# post.comments.append(comment)
+	# db.session.commit()
+	# return redirect("/viewpost?post=" + str(post_id))
+ # Like button
+
+    # replaces key word with emoji
+    if '*wink*' in content:
+        content = content.replace('*wink*', '\U0001F609')
+    if '*smile*' in content:
+        content = content.replace('*smile*', '\U0001F600')
+    if '*like*' in content:
+        content = content.replace('*like*', '\U0001F44D')
+
+
+    postdate = datetime.datetime.now()
+
+    comment = Comment(content2, postdate, current_user.id, post_id)
+
 	current_user.comments.append(comment)
 	post.comments.append(comment)
 	db.session.commit()
 	return redirect("/viewpost?post=" + str(post_id))
+
 
 @login_required
 @app.route('/action_post', methods=['POST'])
