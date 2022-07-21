@@ -12,13 +12,13 @@
 	padding-left: 3%;
 	padding-right: 3%;
 
-	background-color: #F0FFFF;
+	background-color:azure;
 
 }
 .header{
 	border: 1px solid black;
 	overflow: hidden;
-	vertical-align: left;
+	vertical-align: middle;
 	padding: 0.5%;
 	margin-bottom: none;
 
@@ -26,13 +26,12 @@
 }
 .content{
 	margin-top: 0.5%;
+	background-color: #F0FFFF;
 }
 .login{
 	width: 25%;
 	float: right;
 	text-align: center;
-
-	background-color: #F0FFFF;
 
 }
 .loginbox{
@@ -40,8 +39,6 @@
 	margin-left: auto;
 	text-align: center;
 	margin-top: 3%;
-
-	background-color: #F0FFFF;
 }
 .loginelement{
 	margin-top: 0.5%;
