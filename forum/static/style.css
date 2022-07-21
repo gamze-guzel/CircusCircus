@@ -18,7 +18,7 @@
 .header{
 	border: 1px solid black;
 	overflow: hidden;
-	vertical-align: middle;
+	vertical-align: left;
 	padding: 0.5%;
 	margin-bottom: none;
 
@@ -32,12 +32,16 @@
 	float: right;
 	text-align: center;
 
+	background-color: #F0FFFF;
+
 }
 .loginbox{
 	margin-right: auto;
 	margin-left: auto;
 	text-align: center;
 	margin-top: 3%;
+
+	background-color: #F0FFFF;
 }
 .loginelement{
 	margin-top: 0.5%;
