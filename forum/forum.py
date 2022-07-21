@@ -198,14 +198,16 @@ def user(username):
 @app.route('/edit/<username>', methods=['POST', 'GET'])
 @login_required
 def action_edit_user(username):
-	user = User.query.get(username)
+	user = User.query.filter(User.username == username).first()
 	if request.method == 'POST':
-		about = request.form['about']
-		user.about = about
+		user.about = request.form['about']
 		db.session.commit()
+
 	# background_color = request.form['background']
 	# user.about ='testing'
-	return render_template('edit_user.html', user=user)
+		return render_template('edit_user.html', user=user)
+	else:
+		return render_template('edit_user.html', user=user)
 
 #from forum.app import db, app 
 

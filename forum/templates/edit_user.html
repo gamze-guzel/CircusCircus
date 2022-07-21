@@ -3,7 +3,7 @@
 {% block body %}
     <h1>User: {{ user.username }}</h1>
     <hr>
-    <form action="{{ 'action_edit_user' }}" method="post">
+    <form method="POST">
         <input type="text" name="about">
         <input type="submit">
     </form>
