@@ -185,7 +185,6 @@ def generateLinkPath(subforumid):
 
 
 @app.route('/user/<username>')
-@login_required
 def user(username):
 	user = User.query.filter(User.username == username).first()
 	userid = User.query.filter(User.id == username).first()
@@ -195,6 +194,18 @@ def user(username):
 	# posts = [Post.user_id == userid]
 	return render_template('user_profile.html', user=user, userid = userid, posts = posts)
 
+
+@app.route('/edit/<username>', methods=['POST', 'GET'])
+@login_required
+def action_edit_user(username):
+	user = User.query.get(username)
+	if request.method == 'POST':
+		about = request.form['about']
+		user.about = about
+		db.session.commit()
+	# background_color = request.form['background']
+	# user.about ='testing'
+	return render_template('edit_user.html', user=user)
 
 #from forum.app import db, app 
 
