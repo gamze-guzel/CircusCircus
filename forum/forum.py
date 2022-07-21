@@ -199,15 +199,20 @@ def user(username):
 @login_required
 def action_edit_user(username):
 	user = User.query.filter(User.username == username).first()
-	if request.method == 'POST':
+	if request.method == 'POST' and current_user == user:
 		user.about = request.form['about']
 		db.session.commit()
 
 	# background_color = request.form['background']
 	# user.about ='testing'
 		return render_template('edit_user.html', user=user)
+	elif current_user != user:
+		return render_template('user_profile.html', user=user)
 	else:
 		return render_template('edit_user.html', user=user)
+	
+	
+img.path = request.form['path']
 
 #from forum.app import db, app 
 
@@ -256,7 +261,7 @@ class User(UserMixin, db.Model):
 	username = db.Column(db.Text, unique=True)
 	password_hash = db.Column(db.Text)
 	email = db.Column(db.Text, unique=True)
-	admin = db.Column(db.Boolean, default=False, unique=True)
+	# admin = db.Column(db.Boolean, default=False, unique=True)
 	posts = db.relationship("Post", backref="user")
 	comments = db.relationship("Comment", backref="user")
 	about = db.Column(db.Text)
@@ -359,6 +364,10 @@ class Comment(db.Model):
 			self.savedresponce =  "Just a moment ago!"
 		return self.savedresponce
 
+class emojis();
+	id = db.column(db.Integer, primary_key=True)
+	postid = db.column(db.Integer)
+	userid = db.column(db.Integer)
 
 def init_site():
 	admin = add_subforum("Forum", "Announcements, bug reports, and general discussion about the forum belongs here")
